@@ -103,6 +103,6 @@ for m in range(len(list_of_words)):
 
 
 #####Ende
-print('Das Diktat ist zuende.')
-engine.say('Das Diktat ist zuende.')
+print('Das Diktat ist zu Ende.')
+engine.say('Das Diktat ist zu Ende.')
 engine.runAndWait()
