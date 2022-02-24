@@ -105,11 +105,14 @@ for m in range(len(list_of_words)):
     engine.runAndWait()
 
 
-    sleeptime=60*wort_silben/spm - 0.6*wort_silben
+    sleeptime=60*wort_silben/spm - 0.8*wort_silben
 
 #    print(str(sleeptime)+ '\n') #Debugging
 
-    time.sleep(sleeptime)
+    try:
+    	time.sleep(sleeptime)
+    except ValueError:
+    	continue
 
 
 endtime=time.time()
