@@ -1,3 +1,4 @@
+#!Python3
 import pyttsx3
 import time
 
@@ -32,6 +33,10 @@ def silbcount(word):
 	        syllable_count = syllable_count + 1
 
 	    elif(word[while_var]=='Ä' or word[while_var]=='Ä' and word[while_var+1]=='u'):
+	        while_var = while_var + 2
+	        syllable_count = syllable_count + 1
+
+	    elif(word[while_var]=='i' and word[while_var+1]=='e'):
 	        while_var = while_var + 2
 	        syllable_count = syllable_count + 1
 
@@ -87,14 +92,19 @@ with open('diktat.txt', 'r', encoding='utf-8') as file:
 #####Text in Liste aus Einzelwörtern unterteilen
 list_of_words=stringToList(dicttext)
 
+starttime=time.time()
+
 
 for m in range(len(list_of_words)):
     print(list_of_words[m])
+    wort_silben=silbcount(list_of_words[m])
+
+#    print(str(wort_silben)) #Debugging
 
     engine.say(list_of_words[m])
     engine.runAndWait()
 
-    wort_silben=silbcount(list_of_words[m])
+
     sleeptime=60*wort_silben/spm - 0.6*wort_silben
 
 #    print(str(sleeptime)+ '\n') #Debugging
@@ -102,7 +112,11 @@ for m in range(len(list_of_words)):
     time.sleep(sleeptime)
 
 
+endtime=time.time()
+
 #####Ende
 print('Das Diktat ist zu Ende.')
+print('Zeit: ' + str(endtime - starttime) + ' Sekunden')
+print('Eff SPM: ' + str(silbcount(dicttext)/((endtime - starttime)/60)))
 engine.say('Das Diktat ist zu Ende.')
 engine.runAndWait()
