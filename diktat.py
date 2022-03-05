@@ -41,7 +41,8 @@ def silbcount(word):
 	        syllable_count = syllable_count + 1
 
 
-	    elif(word[while_var]=='a' or 
+	    elif(word[while_var]=='y' or # das "y" ist meistens ne eigene Silbe
+	    	word[while_var]=='a' or 
 	        word[while_var]=='e' or 
 	        word[while_var]=='i' or 
 	        word[while_var]=='o' or 
@@ -99,20 +100,18 @@ for m in range(len(list_of_words)):
     print(list_of_words[m])
     wort_silben=silbcount(list_of_words[m])
 
-#    print(str(wort_silben)) #Debugging
-
     engine.say(list_of_words[m])
     engine.runAndWait()
 
+    sleeptime=60*wort_silben/spm - 0.7*wort_silben
 
-    sleeptime=60*wort_silben/spm - 0.8*wort_silben
-
-#    print(str(sleeptime)+ '\n') #Debugging
+    print('          ' + str(wort_silben) + ' Silben und ' + str(sleeptime) + ' Sekunden Sleeptime') #Debugging
 
     try:
     	time.sleep(sleeptime)
     except ValueError:
     	continue
+
 
 
 endtime=time.time()
