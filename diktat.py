@@ -93,7 +93,7 @@ while True:
 
 	except ValueError:
 		print('Eine Zahl!\n')
-
+print('')
 
 #####Diktiertext
 with open('diktat.txt', 'r', encoding='utf-8') as file:
@@ -129,8 +129,9 @@ endtime=time.time()
 
 
 #####Ende
+print('')
 print('Das Diktat ist zu Ende.')
 print('Zeit: ' + str(endtime - starttime) + ' Sekunden')
-print('Eff SPM: ' + str(silbcount(dicttext)/((endtime - starttime)/60)))
+print('Eff SPM: ' + str(silbcount(dicttext)/((endtime - starttime)/60)) + '\n')
 engine.say('Das Diktat ist zu Ende.')
 engine.runAndWait()
