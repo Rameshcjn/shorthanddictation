@@ -4,7 +4,16 @@ import time
 
 
 engine = pyttsx3.init()
+param = 0.7 #Parameter für Pausenzeit
+
+
+#####Einstellungen für TTS
 #rate = engine.getProperty('rate')
+#engine.setProperty('rate', rate+100)
+
+#voices = engine.getProperty('voices')       
+#engine.setProperty('voice', voices[0].id)
+
 
 #####String-to-List-Funktion
 def stringToList(string):
@@ -12,11 +21,12 @@ def stringToList(string):
     listRes = [i + ' ' for i in listRes] #Cheat, um Doppelvokalkomposita händeln zu können
     return listRes
 
+
 #####Silbenzählerfunktion
 def silbcount(word):
 
-	while_var=0
-	syllable_count=0
+	while_var = 0
+	syllable_count = 0
 
 	while while_var < len(word):
 	#    print("now looking at " + str(word[while_var]))
@@ -59,10 +69,10 @@ def silbcount(word):
 	        word[while_var]=='Ü' or 
 	        word[while_var]=='ü'):
 	            syllable_count = syllable_count + 1
-	            while_var = while_var +1
+	            while_var = while_var + 1
 	        
 	    else:
-	        while_var +=1
+	        while_var += 1
 
 #	print('in total the word ' + word + ' has ' + str(syllable_count) + ' syllables')
 	return syllable_count
@@ -91,30 +101,32 @@ with open('diktat.txt', 'r', encoding='utf-8') as file:
 
 
 #####Text in Liste aus Einzelwörtern unterteilen
-list_of_words=stringToList(dicttext)
-
-starttime=time.time()
+list_of_words = stringToList(dicttext)
 
 
+#####Ausführung der Funktionen
+starttime = time.time()
 for m in range(len(list_of_words)):
-    print(list_of_words[m])
-    wort_silben=silbcount(list_of_words[m])
 
+    print(list_of_words[m])
+    wort_silben = silbcount(list_of_words[m])
+    
+    w_start = time.time()
     engine.say(list_of_words[m])
     engine.runAndWait()
+    w_end = time.time()
+    
+    delta_t = w_end - w_start
+    sleeptime = 60 * wort_silben / spm - param * wort_silben
 
-    sleeptime=60*wort_silben/spm - 0.7*wort_silben
-
-    print('          ' + str(wort_silben) + ' Silben und ' + str(sleeptime) + ' Sekunden Sleeptime') #Debugging
+    #print(str(wort_silben) + ' Silben - ' + str(delta_t) + 's Aussprechen - ' + str(sleeptime) + 's Sleeptime') #Debugging
 
     try:
     	time.sleep(sleeptime)
     except ValueError:
     	continue
-
-
-
 endtime=time.time()
+
 
 #####Ende
 print('Das Diktat ist zu Ende.')
