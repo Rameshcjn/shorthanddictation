@@ -3,24 +3,24 @@ import time
 import os
 
 
-param = 0.5 #Parameter für Pausenzeit
+param = 0.5 #Parameter for pausetime
 
 
-#####String-to-List-Funktion
+#####String-to-List-Function
 def stringToList(string):
 	listRes = list(string.split(" "))
 	listRes = [i + ' ' for i in listRes] #Cheat, um Doppelvokalkomposita händeln zu können
 	return listRes
 
 
-#####Silbenzählerfunktion
+#####Syllable-Counting-Function
 def silbcount(word):
 
 	while_var = 0
 	syllable_count = 0
 
 	while while_var < len(word):
-	#	print("now looking at " + str(word[while_var]))
+	#	print("now looking at " + str(word[while_var])) #debugging
 		if(word[while_var]=='e' or word[while_var]=='E' and word[while_var+1]=='i'):
 			while_var = while_var + 2
 			syllable_count = syllable_count + 1
@@ -65,7 +65,7 @@ def silbcount(word):
 		else:
 			while_var += 1
 
-#	print('in total the word ' + word + ' has ' + str(syllable_count) + ' syllables')
+#	print('in total the word ' + word + ' has ' + str(syllable_count) + ' syllables') #debugging
 	return syllable_count
 
 
@@ -86,16 +86,16 @@ while True:
 		print('Eine Zahl!\n')
 print('')
 
-#####Diktiertext
+#####Dictationtext
 with open('diktat.txt', 'r', encoding='utf-8') as file:
 	dicttext = file.read().rstrip()
 
 
-#####Text in Liste aus Einzelwörtern unterteilen
+#####Subdivide text in list of single words
 list_of_words = stringToList(dicttext)
 
 
-#####Ausführung der Funktionen
+#####Call of the function
 starttime = time.time()
 
 
@@ -121,7 +121,7 @@ for m in range(len(list_of_words)):
 endtime=time.time()
 
 
-#####Ende
+#####End
 print('')
 print('Das Diktat ist zu Ende.')
 print('Zeit: ' + str(round(endtime - starttime,2)) + ' Sekunden')
