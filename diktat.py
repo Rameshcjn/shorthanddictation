@@ -1,26 +1,27 @@
 #!Python3
+import re
 import time
 import os
 
 
-param = 0.5 #Parameter for pausetime
+param = 0.5 #Parameter für Pausenzeit
 
 
-#####String-to-List-Function
+#####String-to-List-Funktion
 def stringToList(string):
 	listRes = list(string.split(" "))
 	listRes = [i + ' ' for i in listRes] #Cheat, um Doppelvokalkomposita händeln zu können
 	return listRes
 
 
-#####Syllable-Counting-Function
+#####Silbenzählerfunktion
 def silbcount(word):
 
 	while_var = 0
 	syllable_count = 0
 
 	while while_var < len(word):
-	#	print("now looking at " + str(word[while_var])) #debugging
+	#	print("now looking at " + str(word[while_var]))
 		if(word[while_var]=='e' or word[while_var]=='E' and word[while_var+1]=='i'):
 			while_var = while_var + 2
 			syllable_count = syllable_count + 1
@@ -65,7 +66,7 @@ def silbcount(word):
 		else:
 			while_var += 1
 
-#	print('in total the word ' + word + ' has ' + str(syllable_count) + ' syllables') #debugging
+#	print('in total the word ' + word + ' has ' + str(syllable_count) + ' syllables')
 	return syllable_count
 
 
@@ -86,16 +87,21 @@ while True:
 		print('Eine Zahl!\n')
 print('')
 
-#####Dictationtext
+#####Diktiertext
 with open('diktat.txt', 'r', encoding='utf-8') as file:
 	dicttext = file.read().rstrip()
 
+	#####Textformatierung um Fehler zu vermeiden (Alle nicht alphanumerischen Zeichen, außer Leerzeichen, Punkte und Kommata, gehen verloren)
+	dicttext = a = re.sub(r'\n', ' ', dicttext)
+	dicttext = a = re.sub(r'\s{2,}', ' ', dicttext)
+	dicttext = a = re.sub(r'[^ \w+äöüÄÖÜ.,]', '', dicttext)
 
-#####Subdivide text in list of single words
+
+#####Text in Liste aus Einzelwörtern unterteilen
 list_of_words = stringToList(dicttext)
 
 
-#####Call of the function
+#####Ausführung der Funktionen
 starttime = time.time()
 
 
@@ -112,7 +118,7 @@ for m in range(len(list_of_words)):
 	delta_t = w_end - w_start
 	sleeptime = 60 * wort_silben / spm - param * wort_silben
 
-	print('          ' + str(wort_silben) + ' Silben --- ' + str(round(delta_t, 2)) + 's Aussprechen --- ' + str(round(sleeptime,2 )) + 's Sleeptime') #Debugging
+	#print('          ' + str(wort_silben) + ' Silben --- ' + str(round(delta_t, 2)) + 's Aussprechen --- ' + str(round(sleeptime,2 )) + 's Sleeptime') #Debugging
 
 	try:
 		time.sleep(sleeptime)
@@ -121,7 +127,7 @@ for m in range(len(list_of_words)):
 endtime=time.time()
 
 
-#####End
+#####Ende
 print('')
 print('Das Diktat ist zu Ende.')
 print('Zeit: ' + str(round(endtime - starttime,2)) + ' Sekunden')
