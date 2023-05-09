@@ -3,16 +3,14 @@ import re
 import time
 import os
 
-
 param = 0.5 #Parameter für Pausenzeit
 
 
 #####String-to-List-Funktion
 def stringToList(string):
 	listRes = list(string.split(" "))
-	listRes = [i + ' ' for i in listRes] #Cheat, um Doppelvokalkomposita händeln zu können
+	listRes = [i + ' ' for i in listRes] #Benötigt für Silbenfunktion
 	return listRes
-
 
 #####Silbenzählerfunktion
 def silbcount(word):
@@ -22,53 +20,23 @@ def silbcount(word):
 
 	while while_var < len(word):
 	#	print("now looking at " + str(word[while_var]))
-		if(word[while_var]=='e' or word[while_var]=='E' and word[while_var+1]=='i'):
-			while_var = while_var + 2
-			syllable_count = syllable_count + 1
-
-		elif(word[while_var]=='E' or word[while_var]=='e' and word[while_var+1]=='u'):
-			while_var = while_var + 2
-			syllable_count = syllable_count + 1
-
-		elif(word[while_var]=='A' or word[while_var]=='a' and word[while_var+1]=='u'):
-			while_var = while_var + 2
-			syllable_count = syllable_count + 1
-
-		elif(word[while_var]=='Ä' or word[while_var]=='Ä' and word[while_var+1]=='u'):
-			while_var = while_var + 2
-			syllable_count = syllable_count + 1
-
+		if(word[while_var] in 'eE' and word[while_var+1] in 'iu'):
+			while_var += 2
+			syllable_count += 1
+		elif(word[while_var] in 'aAäÄ' and word[while_var+1]=='u'):
+			while_var += 2
+			syllable_count += 1
 		elif(word[while_var]=='i' and word[while_var+1]=='e'):
-			while_var = while_var + 2
-			syllable_count = syllable_count + 1
-
-
-		elif(word[while_var]=='y' or # das "y" ist meistens ne eigene Silbe
-			word[while_var]=='a' or 
-			word[while_var]=='e' or 
-			word[while_var]=='i' or 
-			word[while_var]=='o' or 
-			word[while_var]=='u' or 
-			word[while_var]=='A' or 
-			word[while_var]=='E' or 
-			word[while_var]=='I' or 
-			word[while_var]=='O' or 
-			word[while_var]=='U' or 
-			word[while_var]=='ä' or 
-			word[while_var]=='Ä' or 
-			word[while_var]=='ö' or 
-			word[while_var]=='Ö' or 
-			word[while_var]=='Ü' or 
-			word[while_var]=='ü'):
-				syllable_count = syllable_count + 1
-				while_var = while_var + 1
-
+			while_var += 2
+			syllable_count += 1
+		elif(word[while_var] in 'yaeiouÄÖÜäöüAEIOU'):
+			while_var += 1
+			syllable_count += 1
 		else:
 			while_var += 1
 
-#	print('in total the word ' + word + ' has ' + str(syllable_count) + ' syllables')
+	#print('in total the word ' + word + ' has ' + str(syllable_count) + ' syllables')
 	return syllable_count
-
 
 #####Input
 while True:
@@ -93,29 +61,23 @@ with open('diktat.txt', 'r', encoding='utf-8') as file:
 
 	#####Textformatierung um Fehler zu vermeiden (Alle nicht alphanumerischen Zeichen, außer Leerzeichen, Punkte und Kommata, gehen verloren)
 	dicttext = a = re.sub(r'\n', ' ', dicttext)
-	dicttext = a = re.sub(r'\s{2,}', ' ', dicttext)
 	dicttext = a = re.sub(r'[^ \w+äöüÄÖÜ.,]', '', dicttext)
-
+	dicttext = a = re.sub(r'\s{2,}', ' ', dicttext)
 
 #####Text in Liste aus Einzelwörtern unterteilen
 list_of_words = stringToList(dicttext)
 
-
 #####Ausführung der Funktionen
 starttime = time.time()
-
-
 for m in range(len(list_of_words)):
 
-	print(list_of_words[m])
 	wort_silben = silbcount(list_of_words[m])
-		
+	print(list_of_words[m] + ' ' + str(wort_silben))
+
 	w_start = time.time()
 	os.system("say " + list_of_words[m])
-	w_end = time.time()
-		
-	#delta_t = w_end - w_start
-	delta_t = w_end - w_start
+
+	delta_t = time.time() - w_start
 	sleeptime = 60 * wort_silben / spm - param * wort_silben
 
 	#print('          ' + str(wort_silben) + ' Silben --- ' + str(round(delta_t, 2)) + 's Aussprechen --- ' + str(round(sleeptime,2 )) + 's Sleeptime') #Debugging
@@ -125,7 +87,6 @@ for m in range(len(list_of_words)):
 	except ValueError:
 		continue
 endtime=time.time()
-
 
 #####Ende
 print('')
